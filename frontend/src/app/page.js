@@ -16,12 +16,10 @@ export default function Home() {
 
   const [missedChars, setMissedChars] = useState({});
   const [missedCharFrequencies, setMissedCharFrequencies] = useState({});
-  const [missedCharsDisplay, setMissedCharsDisplay] = useState("");
-  const [missedFreqDisplay, setMissedFreqDisplay] = useState("");
 
   function characterFrequency(text) {
     const frequency = {};
-    for (const char of text) {
+    for (const char of text.toLowerCase()) {
       if (frequency[char]) {
         frequency[char]++;
       } else {
@@ -31,14 +29,22 @@ export default function Home() {
     return frequency;
   }
 
+  function getCharacterDictionary(str) {
+    const charDict = {};
+    for (const char of str) {
+      charDict[char] = true;
+    }
+    return charDict;
+  }
+
   const handleInputChange = (e) => {
-    const input = e.target.textContent;
+    const input = e.target.textContent.toLowerCase();
     setTypedText(input);
     setCursorPosition(input.length);
     if (!startTime) {
       setStartTime(Date.now());
     }
-    if (input.length === targetText.length) {
+    if (input.length === targetText.toLowerCase().length) {
       setEndTime(Date.now());
     }
   };
@@ -48,7 +54,7 @@ export default function Home() {
       return { opacity: 0.5, color: "#ffffff" };
     }
 
-    if (typedText[index] === char) {
+    if (typedText[index] === char.toLowerCase()) {
       return { color: "green" };
     } else {
       return { color: "red" };
@@ -145,26 +151,36 @@ export default function Home() {
     setMissedChars(missed);
     setMissedCharFrequencies(missedFreq);
 
-    let missedDisplay = "";
-    for (const char in missed) {
-      missedDisplay += `${char}: ${missed[char]}, `;
+    // Partition and send to backend
+    const sentences = targetText.split(". ");
+    const sentenceChunks = [];
+    for (let i = 0; i < sentences.length; i += 3) {
+      sentenceChunks.push(sentences.slice(i, i + 3).join(". "));
     }
-    setMissedCharsDisplay(missedDisplay);
 
-    let freqDisplay = "";
-    for (const char in missedFreq) {
-      freqDisplay += `${char}: {`;
-      for (const wrongChar in missedFreq[char]) {
-        freqDisplay += `${wrongChar}: ${missedFreq[char][wrongChar]}, `;
-      }
-      freqDisplay += "}, ";
-    }
-    setMissedFreqDisplay(freqDisplay)
-
+    sentenceChunks.forEach((chunk) => {
+      const charDict = getCharacterDictionary(chunk);
+      // Send charDict to your backend
+      sendDataToBackend(charDict); // Replace with your backend logic
+    });
   }, [typedText, targetText]);
 
+  function sendDataToBackend(data) {
+    // Replace with your backend API call (e.g., fetch, axios)
+    console.log("Sending data to backend:", data); // Example: Console log instead of actual API call
+    // fetch('/api/processData', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(data),
+    // })
+    // .then((response) => response.json())
+    // .then((result) => console.log('Backend response:', result));
+  }
+
   return (
-    <div className={styles.container}>
+    <div className={`geist-sans geist-mono ${styles.container}`}>
       <div
         ref={typingAreaRef}
         className={styles.typingArea}
