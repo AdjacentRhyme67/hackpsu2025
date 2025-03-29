@@ -1,12 +1,7 @@
 from google import genai
+from api_keys import GOOGLE_API_KEY
 
-prompt = """Create 4 sentences for a AGE year old in grade GRADE to practice keyboarding.
-They struggle typing the letters LETTERONE and LETTERTWO. They often type LETTERONECOMPLIMENT instead of LETTERONE and LETTERTWOCOMPLIMENT instead of LETTERTWO.
-Tailor the sentences so they can work on typing the letters correctly and learning the difference between the letters that they are supposed to type and the letters that they type instead.
-Ensure it's a sentence that somebody would actually say and would make sense in a real world context. Don't use punctuation other than a period in each sentence."""
-
-
-def generate_content(grade,):
+def generate_content(age,grade,letter_one,letter_two,letter_one_compliment,letter_two_compliment):
     """
     Generates content using the Google GenAI API.
     
@@ -20,12 +15,16 @@ def generate_content(grade,):
      # Replace with your actual API key
      # Example: "AIzaSyBuUCB6ALyKL8eLY-C2Og2WA23u2vlljQs"
 
+    prompt = f"""Create 4 sentences for a {age} year old in grade {grade} to practice keyboarding.
+    They struggle typing the letters {letter_one} and {letter_two}. They often type {letter_one_compliment} instead of {letter_one} and {letter_two_compliment} instead of {letter_two}.
+    Tailor the sentences so they can work on typing the letters correctly and learning the difference between the letters that they are supposed to type and the letters that they type instead.
+    Ensure it's a sentence that somebody would actually say and would make sense in a real world context. Don't use punctuation other than a period in each sentence."""
 
-    client = genai.Client(api_key="")
+    client = genai.Client(api_key=GOOGLE_API_KEY)
 
-    response = client.models.generate_content(model="gemini-2.0-flash",contents=f"give me 4 sentences an individual with the comprehension of a {grade}th grader could type format in a python list.",
-)
+    response = client.models.generate_content(model="gemini-2.0-flash",contents=prompt)
+    return response
 
 
 
-print(prompt)
+

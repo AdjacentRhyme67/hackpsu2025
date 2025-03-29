@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, j
 import os
 import requests
 import json
+from Genai import generate_content
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Generate a random secret key for session management
