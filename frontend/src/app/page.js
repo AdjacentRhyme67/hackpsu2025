@@ -10,11 +10,37 @@ export default function Home() {
   const [cursorPosition, setCursorPosition] = useState(0);
   const typingAreaRef = useRef(null);
   const cursorRef = useRef(null);
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+  const [wpm, setWpm] = useState(0);
+
+  const [missedChars, setMissedChars] = useState({});
+  const [missedCharFrequencies, setMissedCharFrequencies] = useState({});
+  const [missedCharsDisplay, setMissedCharsDisplay] = useState("");
+  const [missedFreqDisplay, setMissedFreqDisplay] = useState("");
+
+  function characterFrequency(text) {
+    const frequency = {};
+    for (const char of text) {
+      if (frequency[char]) {
+        frequency[char]++;
+      } else {
+        frequency[char] = 1;
+      }
+    }
+    return frequency;
+  }
 
   const handleInputChange = (e) => {
     const input = e.target.textContent;
     setTypedText(input);
     setCursorPosition(input.length);
+    if (!startTime) {
+      setStartTime(Date.now());
+    }
+    if (input.length === targetText.length) {
+      setEndTime(Date.now());
+    }
   };
 
   const getTextStyle = (char, index) => {
@@ -46,7 +72,10 @@ export default function Home() {
         return;
       }
 
-      if (isWordBoundary(typingAreaRef.current.textContent, position) && (e.key === "ArrowLeft" || e.key === "ArrowRight" || e.key === "Backspace")) {
+      if (
+        isWordBoundary(typingAreaRef.current.textContent, position) &&
+        (e.key === "ArrowLeft" || e.key === "ArrowRight" || e.key === "Backspace")
+      ) {
         e.preventDefault();
       }
     }
@@ -77,6 +106,63 @@ export default function Home() {
     }
   }, [cursorPosition]);
 
+  useEffect(() => {
+    if (endTime && startTime) {
+      const time = (endTime - startTime) / 1000 / 60;
+      const words = targetText.split(" ").length;
+      setWpm(Math.round(words / time));
+    }
+  }, [endTime, startTime]);
+
+  useEffect(() => {
+    const missed = {};
+    const missedFreq = {};
+
+    for (let i = 0; i < typedText.length; i++) {
+      const targetChar = targetText[i].toLowerCase();
+      const typedChar = typedText[i] ? typedText[i].toLowerCase() : undefined;
+
+      if (typedChar !== targetChar) {
+        if (!missed[targetChar]) {
+          missed[targetChar] = 1;
+        } else {
+          missed[targetChar]++;
+        }
+
+        if(!missedFreq[targetChar]){
+          missedFreq[targetChar] = {};
+        }
+
+        if(typedChar !== undefined){
+          if(!missedFreq[targetChar][typedChar]){
+            missedFreq[targetChar][typedChar] = 1;
+          } else {
+            missedFreq[targetChar][typedChar]++;
+          }
+        }
+      }
+    }
+    setMissedChars(missed);
+    setMissedCharFrequencies(missedFreq);
+
+    let missedDisplay = "";
+    for (const char in missed) {
+      missedDisplay += `${char}: ${missed[char]}, `;
+    }
+    setMissedCharsDisplay(missedDisplay);
+
+    let freqDisplay = "";
+    for (const char in missedFreq) {
+      freqDisplay += `${char}: {`;
+      for (const wrongChar in missedFreq[char]) {
+        freqDisplay += `${wrongChar}: ${missedFreq[char][wrongChar]}, `;
+      }
+      freqDisplay += "}, ";
+    }
+    setMissedFreqDisplay(freqDisplay)
+
+  }, [typedText, targetText]);
+
   return (
     <div className={styles.container}>
       <div
@@ -96,6 +182,7 @@ export default function Home() {
           </span>
         ))}
       </div>
+      {endTime && <p>WPM: {wpm}</p>}
     </div>
   );
 }
