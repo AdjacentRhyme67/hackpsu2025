@@ -21,7 +21,7 @@ def generate_content(grade,):
      # Example: "AIzaSyBuUCB6ALyKL8eLY-C2Og2WA23u2vlljQs"
 
 
-    client = genai.Client(api_key="AIzaSyBuUCB6ALyKL8eLY-C2Og2WA23u2vlljQs")
+    client = genai.Client(api_key="")
 
     response = client.models.generate_content(model="gemini-2.0-flash",contents=f"give me 4 sentences an individual with the comprehension of a {grade}th grader could type format in a python list.",
 )
