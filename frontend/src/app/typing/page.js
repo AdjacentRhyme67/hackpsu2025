@@ -75,37 +75,49 @@ export default function Home() {
 
   const checkCompletion = async () => {
     const coloredCharacters = document.querySelectorAll(`.${styles.text} > span[style*="color: green"], .${styles.text} > span[style*="color: red"]`);
-      if (endTime) {
-        setParagraphCounter(paragraphCounter + 1); // Increment the paragraph counter when the test is completed
-        if (paragraphCounter >= 2) {
-          setTargetText("DONE");
+    if (endTime && !typedText.endsWith("DONE")) { // Only proceed if we have an end time and haven't already completed
+      
+      
+      const newCounter = paragraphCounter + 1;
+      setParagraphCounter(newCounter); // Update counter first
+      
+     
+      
+      if (newCounter >= 3) {
+        
+        setTargetText("DONE");
+      } else {
+       
+        // Create a copy of the data to ensure it's consistent
+        const dataToSend = {
+          missedChars: {...missedChars},
+          missedCharFrequencies: {...missedCharFrequencies},
+          allCharCounts: {...allCharCounts}
+        };
+        
+        try {
+          const response = await fetch('http://127.0.0.1:5000/api-data', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSend),
+          });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          
+          const combinedText = Object.values(data).join(" ");
+          setTargetText(combinedText);
+        } catch (error) {
+         
         }
-        else {
-          fetch('http://127.0.0.1:5000/api-data', { // Your Flask endpoint
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({missedChars, missedCharFrequencies, allCharCounts}), // Send a message or data
-            })
-            .then(response => {
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            return response.json();
-          })
-          .then(data => {
-            const combinedText = Object.values(data).join(" ");
-            setTargetText(combinedText);
-          })
-            .catch(error => {
-                console.error('Error:', error); // Handle any errors
-            });
-        }
-      }};
-
+      }
+    }
+  };
 
 
   useEffect(() => {
