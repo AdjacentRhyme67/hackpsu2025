@@ -10,6 +10,7 @@ export default function Home() {
   const [cursorPosition, setCursorPosition] = useState(0);
   const typingAreaRef = useRef(null);
   const cursorRef = useRef(null);
+  const [paragraphCounter , setParagraphCounter] = useState(0);
 
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -75,29 +76,34 @@ export default function Home() {
   const checkCompletion = async () => {
     const coloredCharacters = document.querySelectorAll(`.${styles.text} > span[style*="color: green"], .${styles.text} > span[style*="color: red"]`);
       if (endTime) {
-        fetch('http://127.0.0.1:5000/api-data', { // Your Flask endpoint
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({missedChars, missedCharFrequencies, allCharCounts}), // Send a message or data
+        setParagraphCounter(paragraphCounter + 1); // Increment the paragraph counter when the test is completed
+        if (paragraphCounter >= 2) {
+          setTargetText("DONE");
+        }
+        else {
+          fetch('http://127.0.0.1:5000/api-data', { // Your Flask endpoint
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({missedChars, missedCharFrequencies, allCharCounts}), // Send a message or data
+            })
+            .then(response => {
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            return response.json();
           })
-          .then(response => {
-
-          if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          return response.json();
-        })
-        .then(data => {
-          console.log("data from backend:", data); // Log the response from the server
-          setTargetText(data.response.toString());
-          console.log("Updated target text:", data.response.toString()); // Log the updated target text
-        })
-          .catch(error => {
-              console.error('Error:', error); // Handle any errors
-          });
+          .then(data => {
+            const combinedText = Object.values(data).join(" ");
+            setTargetText(combinedText);
+          })
+            .catch(error => {
+                console.error('Error:', error); // Handle any errors
+            });
+        }
       }};
 
 

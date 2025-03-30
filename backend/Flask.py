@@ -9,8 +9,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Generate a random secret key for session management
 CORS(app)  # Enable Cross-Origin Resource Sharing (CORS) for the Flask app
-grade = 0
-age = 0
+grade = 5
+age = 7
 
 @app.route('/start_button_click', methods = ['POST'])
 def intial_data():
@@ -24,7 +24,7 @@ def intial_data():
 
     if grade and age:
         response = generate_response(age, grade, None, None, None, None)
-        return jsonify({"response": response.text}), 200
+        return response, 200
 
 
 @app.route('/api-data', methods=['POST'])
@@ -35,8 +35,6 @@ def handle_data():
             return jsonify({"error": "Invalid JSON data"}), 400
 
         # Process the JSON data
-
-        print(data)
 
         every_character = data.get('allCharCounts')
         mistaken_characters = data.get('missedChars')
@@ -52,7 +50,7 @@ def handle_data():
 
            # Call the generate_content function with the provided data
             response = generate_response(age, grade, letter_one, letter_two, letter_one_compliment, letter_two_compliment)
-            return jsonify({"response": response.text}), 200
+            return response, 200
             #return response.text
     
 

@@ -46,7 +46,8 @@ export default function LaunchPage() {
             return response.json(); // Parse the JSON response
         })
         .then(data => {
-            setTargetText(data.response.toString());
+            const combinedText = Object.values(data).join(" ");
+            setTargetText(combinedText);
         })
         .catch(error => {
             console.error('Fetch error:', error); // Handle any errors

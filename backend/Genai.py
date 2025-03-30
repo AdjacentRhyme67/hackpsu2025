@@ -1,5 +1,7 @@
 from google import genai
 from api_keys import GOOGLE_API_KEY
+import json
+import re
 
 def generate_response(age,grade,letter_one,letter_two,letter_one_compliment,letter_two_compliment):
     """
@@ -29,7 +31,67 @@ def generate_response(age,grade,letter_one,letter_two,letter_one_compliment,lett
     client = genai.Client(api_key=GOOGLE_API_KEY)
 
     response = client.models.generate_content(model="gemini-2.0-flash",contents=prompt)
-    return response
+
+    response_text = response.text  # Extract the text from the response object
+
+    try:
+        # If Gemini returns valid JSON
+        sentences_json = json.loads(response_text)
+        
+        
+        
+        # Ensure we have keys 1,2,3,4
+        result = {
+            "one": "",
+            "two": "",
+            "three": "",
+            "four": ""
+        }
+        
+    except json.JSONDecodeError:
+        # If Gemini didn't return valid JSON, try to extract sentences
+        # Look for sentences or numbered list
+        sentences = []
+        
+        # Check if response has markdown code blocks with JSON
+        json_pattern = r'```(?:json)?\s*({.*?})\s*```'
+        json_match = re.search(json_pattern, response_text, re.DOTALL)
+        
+        if json_match:
+            try:
+                extracted_json = json.loads(json_match.group(1))
+                formatted_json = {int(k): v for k, v in extracted_json.items()}
+                result = {
+                    "one": formatted_json.get(1, ""),
+                    "two": formatted_json.get(2, ""),
+                    "three": formatted_json.get(3, ""),
+                    "four": formatted_json.get(4, "")
+                }
+                return result
+            except:
+                pass
+                
+        # Try to find numbered sentences (1. sentence or 1) sentence)
+        numbered_pattern = r'(?:\d[\.\)]\s*)([^\.]+\.)' 
+        sentences = re.findall(numbered_pattern, response_text)
+        
+        # If we can't find numbered sentences, just split by periods
+        if not sentences or len(sentences) < 4:
+            # Remove any explanatory text and code blocks
+            cleaned_text = re.sub(r'```.*?```', '', response_text, flags=re.DOTALL)
+            sentences = [s.strip() + '.' for s in cleaned_text.split('.') if s.strip()]
+            
+        # Create result JSON with up to 4 sentences
+        result = {}
+        for i in range(min(4, len(sentences))):
+            result[i+1] = sentences[i].strip()
+            
+        # Fill any missing entries
+        for i in range(1, 5):
+            if i not in result:
+                result[i] = ""
+    
+    return result
 
 
 
