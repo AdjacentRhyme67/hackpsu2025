@@ -3,6 +3,7 @@ import os
 import requests
 import json
 from Genai import generate_response
+from Genai import translate
 from flask_cors import CORS
 
 
@@ -120,6 +121,19 @@ def send_analytics():
         except Exception as e:
             print(e)
             return jsonify({"error": str(e)}), 500  # Handle exceptions
+        
+@app.route('/translate', methods=['POST'])
+def translate_to_spanish():
+    try:
+        data = request.get_json()  # Get JSON data from the request
+        if data is None:
+            return jsonify({"error": "Invalid JSON data"}), 400
+        text_string = ' '.join(data.values())  
+        translation = translate(text_string) 
+        return translation
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':

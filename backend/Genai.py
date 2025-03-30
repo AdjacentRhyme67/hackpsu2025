@@ -93,6 +93,64 @@ def generate_response(age,grade,letter_one,letter_two,letter_one_compliment,lett
     
     return result
 
+def translate(sentences):
+    
+    
+    # Initialize the GenAI client with your API key
+    client = genai.Client(api_key=GOOGLE_API_KEY)
+
+    sentences_json = json.dumps(sentences, ensure_ascii=False)
+
+    # Create a prompt for translation
+    prompt = f"""Translate the following sentences into Spanish: {sentences_json}.
+    Make sure to keep the meaning and context of the sentences intact.
+    Return the translation as a JSON object with the keys: one, two, three, four, 
+    and the values as the translated sentences. Only return the JSON object with the translations."""
+
+    # Generate content using the Gemini model
+    response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+    
+    response_text = response.text  # Extract the response text
+
+    try:
+        # Try loading the response as JSON
+        translated_json = json.loads(response_text)
+
+        # Ensure the format matches the expected structure
+        result = {
+            "one": translated_json.get("one", ""),
+            "two": translated_json.get("two", ""),
+            "three": translated_json.get("three", ""),
+            "four": translated_json.get("four", "")
+        }
+
+        return result
+
+    except json.JSONDecodeError:
+        # If Gemini didn't return valid JSON, try to extract sentences manually
+        json_pattern = r'```(?:json)?\s*({.*?})\s*```'
+        json_match = re.search(json_pattern, response_text, re.DOTALL)
+
+        if json_match:
+            try:
+                extracted_json = json.loads(json_match.group(1))
+                return {
+                    "one": extracted_json.get("one", ""),
+                    "two": extracted_json.get("two", ""),
+                    "three": extracted_json.get("three", ""),
+                    "four": extracted_json.get("four", "")
+                }
+            except:
+                pass
+        
+        # If still no valid JSON, return an empty structured response
+        return {
+            "one": "",
+            "two": "",
+            "three": "",
+            "four": ""
+        }
+
 
 
 
