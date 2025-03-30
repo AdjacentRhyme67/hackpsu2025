@@ -23,7 +23,7 @@ export const VariableProvider = ({ children }) => {
       allCharCounts,
       setAllCharCounts,
       analyticsData,
-      setAnalyticsData
+      setAnalyticsData,
     };
 
     return (

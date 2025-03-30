@@ -104,7 +104,7 @@ def translate(sentences):
     # Create a prompt for translation
     prompt = f"""Translate the following sentences into Spanish: {sentences_json}.
     Make sure to keep the meaning and context of the sentences intact.
-    Return the translation as a JSON object with the keys: one, two, three, four, 
+    Return the translation as a JSON object with the keys: one, two, three, four, in the same order the sentences are inputted
     and the values as the translated sentences. Only return the JSON object with the translations."""
 
     # Generate content using the Gemini model

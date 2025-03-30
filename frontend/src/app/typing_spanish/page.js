@@ -27,6 +27,7 @@ export default function Spanish() {
   const typingAreaRef = useRef(null);
   const cursorRef = useRef(null);
   const [paragraphCounter , setParagraphCounter] = useState(0);
+  const [spanishText, setSpanishText] = useState("");
 
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -34,6 +35,40 @@ export default function Spanish() {
   const [elapsedTime, setElapsedTime] = useState(0);
 
   const [redIndexes, setRedIndexes] = useState([]);
+
+  const createSpanishText = async () => {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/translate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(targetText), // Send the target text to the server for translation
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        const combinedText = data["one"] + " " + data["two"] + " " + data["three"] + " " + data["four"]; // Combine the translated text from the response
+        setSpanishText(combinedText);
+      } catch (error) {
+       
+      
+    }
+  }
+
+  useEffect(() => {
+
+    createSpanishText();
+    }, [targetText]); 
+
+    
+
+
+   // Call the fetchData function
 
   useEffect(() => {
       if (targetText === "DONE") {
@@ -325,6 +360,7 @@ export default function Spanish() {
         ))}
       </div>
       <p className={styles.timer}>Elapsed Time: {formatTime(elapsedTime)}</p>
+      <p className={styles.spanishText}>{spanishText}</p>
     </div>
   );
 }

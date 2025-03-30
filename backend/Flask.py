@@ -128,7 +128,8 @@ def translate_to_spanish():
         data = request.get_json()  # Get JSON data from the request
         if data is None:
             return jsonify({"error": "Invalid JSON data"}), 400
-        text_string = ' '.join(data.values())  
+        print(data)
+        text_string = ' '.join(str(data))
         translation = translate(text_string) 
         return translation
     except Exception as e:
