@@ -65,6 +65,7 @@ def find_key_by_value(dictionary, value):
             return key
     return None
 
+
 def calculate_letters(every_character, mistaken_characters, typed_instead):
     letter_percent_errors = []  # List to store (letter, percent_error) tuples
 
@@ -93,6 +94,32 @@ def calculate_letters(every_character, mistaken_characters, typed_instead):
         letter_two_compliment = find_key_by_value(typed_instead[letter_two], max(typed_instead[letter_two].values()))
 
     return [letter_one, letter_two, letter_one_compliment, letter_two_compliment]
+
+@app.route('/api-analytics', methods=['POST'])
+def send_analytics():
+        try:
+            data = request.get_json()  # Get JSON data from the request
+            if data is None:
+                return jsonify({"error": "Invalid JSON data"}), 400
+            
+            every_character = data.get('allCharCounts')
+            mistaken_characters = data.get('missedChars')
+            typed_instead = data.get('missedCharFrequencies')
+            letter_list = calculate_letters(every_character, mistaken_characters, typed_instead)
+
+            analytics_json = {
+                "firstLetter" : letter_list[0],
+                "firstLetterPercent" : round((mistaken_characters[letter_list[0]] / every_character[letter_list[0]]),2),
+                "secondLetter" : letter_list[1],
+                "secondLetterPercent" : round((mistaken_characters[letter_list[1]] / every_character[letter_list[1]]),2),
+                "firstLetterComp" : letter_list[2],
+                "secondLetterComp" : letter_list[3]
+            }
+            return analytics_json, 200
+
+        except Exception as e:
+            print(e)
+            return jsonify({"error": str(e)}), 500  # Handle exceptions
 
 
 if __name__ == '__main__':
