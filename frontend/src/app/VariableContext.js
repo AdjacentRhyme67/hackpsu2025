@@ -9,6 +9,7 @@ export const VariableProvider = ({ children }) => {
     const [missedCharFrequencies, setMissedCharFrequencies] = useState({});
     const [allCharCounts, setAllCharCounts] = useState({});
     const [targetText, setTargetText] = useState("Default");
+    const [analyticsData, setAnalyticsData] = useState({});
 
     const value = {
       targetText,
@@ -21,6 +22,8 @@ export const VariableProvider = ({ children }) => {
       setMissedCharFrequencies,
       allCharCounts,
       setAllCharCounts,
+      analyticsData,
+      setAnalyticsData
     };
 
     return (

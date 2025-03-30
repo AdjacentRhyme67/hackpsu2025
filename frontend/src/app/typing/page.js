@@ -17,7 +17,9 @@ export default function Home() {
     missedCharFrequencies,
     setMissedCharFrequencies,
     allCharCounts,
-    setAllCharCounts
+    setAllCharCounts,
+    analyticsData,
+    setAnalyticsData
   } = useVariable();
 
   const [typedText, setTypedText] = useState("");
@@ -35,6 +37,7 @@ export default function Home() {
 
   useEffect(() => {
       if (targetText === "DONE") {
+
           setAggregateWpm(Math.round(aggregateWpm/4));
           router.push("/analytics");  // Navigate to Analytics Page
       }
@@ -114,19 +117,44 @@ export default function Home() {
       const newCounter = paragraphCounter + 1;
       setParagraphCounter(newCounter); // Update counter first
       
-     
+      const dataToSend = {
+        missedChars: {...missedChars},
+        missedCharFrequencies: {...missedCharFrequencies},
+        allCharCounts: {...allCharCounts}
+      };
       
       if (newCounter >= 3) {
         
         setTargetText("DONE");
+
+        try {
+          const response = await fetch('http://127.0.0.1:5000/api-analytics', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSend),
+          });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          setAnalyticsData(data); // Assuming the server returns some analytics data
+
+
+       
+        } catch (error) {
+          console.error("Error sending data to the server:", error);
+          // Handle error appropriately, maybe show a notification to the user
+        }
+        
+
       } else {
        
         // Create a copy of the data to ensure it's consistent
-        const dataToSend = {
-          missedChars: {...missedChars},
-          missedCharFrequencies: {...missedCharFrequencies},
-          allCharCounts: {...allCharCounts}
-        };
+        
         
         try {
           const response = await fetch('http://127.0.0.1:5000/api-data', {

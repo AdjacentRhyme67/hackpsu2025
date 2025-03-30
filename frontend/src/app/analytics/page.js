@@ -3,7 +3,8 @@
 import { useVariable } from "../VariableContext";
 
 export default function AnalyticsPage() {
-    const { aggregateWpm } = useVariable();
+    const { aggregateWpm, analyticsData } = useVariable();
+
         
     return (
         <main style={{
@@ -28,12 +29,10 @@ export default function AnalyticsPage() {
                 <div style={{ textAlign: "left", fontSize: "2.5em" }}>
                     <h3 style={{ textDecoration: "underline" }}>Most Missed Letters</h3>
                     <h3 style={{ textDecoration: "underline" }}>Las letras más perdidas</h3>
-                    <p>1.) Letter "E" : 15%</p>
-                    <p style={{ fontSize: "0.8em" }}>Letra "E" : 15%</p>
-                    <p>2.) Letter "A" : 12%</p>
-                    <p style={{ fontSize: "0.8em" }}>Letra "A" : 12%</p>
-                    <p>3.) Letter "S" : 10%</p>
-                    <p style={{ fontSize: "0.8em" }}>Letra "S" : 10%</p>
+                    <p>1.) Letter "{analyticsData["firstLetter"]}" : {analyticsData["firstLetterPercent"]}%</p>
+                    <p style={{ fontSize: "0.8em" }}>Letra "{analyticsData["firstLetter"]}" : {analyticsData["firstLetterPercent"]}%</p>
+                    <p>2.) Letter "{analyticsData["secondLetter"]}" : {analyticsData["secondLetterPercent"]}%</p>
+                    <p style={{ fontSize: "0.8em" }}>Letra "{analyticsData["secondLetter"]}" : {analyticsData["secondLetterPercent"]}%</p>
                 </div>
                 <div style={{ textAlign: "right", fontSize: "2.5em" }}>
                     <h3 style={{ textDecoration: "underline" }}>Words Per Minute (WPM)</h3>
