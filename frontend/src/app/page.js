@@ -8,6 +8,7 @@ export default function LaunchPage() {
     const [grade, setGrade] = useState('');
     const [ageError, setAgeError] = useState('');
     const [gradeError, setGradeError] = useState('');
+    const [translate, setTranslate] = useState(false); // boolean value for checkbox
 
     const handleStart = (e) => {
         if (age < 6) {
@@ -22,7 +23,17 @@ export default function LaunchPage() {
             return;
         }
 
-        console.log("Age:", age, "Grade:", grade);
+        // translate is already a boolean value, you can use it directly
+        console.log("Age:", age, "Grade:", grade, "Translate:", translate);
+
+        // Example: Using the boolean value
+        if (translate) {
+            console.log("Language translation requested.");
+            // Implement your translation logic here, such as passing it as a query parameter
+            // to the /typing page or storing it in local storage.
+        } else {
+            console.log("Language translation not requested.");
+        }
     };
 
     useEffect(() => {
@@ -74,10 +85,10 @@ export default function LaunchPage() {
                 marginBottom: '30px', 
                 width: '400px', 
                 maxWidth: '95%',
-                alignItems: "center" // Center inputs and labels
+                alignItems: "center" 
             }}>
-                <div style={{ display: 'flex', alignItems: 'center', width: "100%" }}>
-                    <label style={{ width: '150px', textAlign: 'left', fontSize: "1.2em" }}>Age/Edad:</label>
+                <div style={{ display: 'flex', width: "100%" }}>
+                    <label style={{ width: '150px', textAlign: 'right', fontSize: "1.2em", paddingRight: "10px" }}>Age/Edad:</label>
                     <input 
                         type="number" 
                         value={age} 
@@ -85,8 +96,8 @@ export default function LaunchPage() {
                         style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#36393f', color: 'white', fontSize: "1.2em" }} 
                     />
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', width: "100%" }}>
-                    <label style={{ width: '132px', textAlign: 'left', fontSize: "1.2em" }}>Grade/Grado:</label>
+                <div style={{ display: 'flex', width: "100%" }}>
+                    <label style={{ width: '132px', textAlign: 'right', fontSize: "1.2em", paddingRight: "10px" }}>Grade/Grado:</label>
                     <select 
                         value={grade} 
                         onChange={(e) => setGrade(e.target.value)} 
@@ -119,6 +130,17 @@ export default function LaunchPage() {
                     Enter App
                 </button>
             </Link>
+
+            <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
+                <input 
+                    type="checkbox" 
+                    id="translate" 
+                    checked={translate} // Use the boolean state variable
+                    onChange={(e) => setTranslate(e.target.checked)} 
+                    style={{ marginRight: "10px" }} 
+                />
+                <label htmlFor="translate" style={{ fontSize: "1.1em" }}>Language Translation / Traducción de Idioma</label>
+            </div>
 
             {(ageError || gradeError) && <div style={{ marginTop: '30px', color: 'red', textAlign: 'center', fontSize: "1.2em" }}>
                 {ageError && <p>{ageError}</p>}
