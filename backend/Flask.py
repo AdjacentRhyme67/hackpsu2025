@@ -17,6 +17,8 @@ def intial_data():
     data = request.get_json()  # Get JSON data from the request
     if data is None:
         return jsonify({"error": "Invalid JSON data"}), 400
+    global grade
+    global age
     grade = data.get('grade')
     age = data.get('age')
 
@@ -25,7 +27,7 @@ def intial_data():
         return jsonify({"response": response.text}), 200
 
 
-@app.route('/api/data', methods=['POST'])
+@app.route('/api-data', methods=['POST'])
 def handle_data():
     try:
         data = request.get_json()  # Get JSON data from the request
@@ -33,12 +35,17 @@ def handle_data():
             return jsonify({"error": "Invalid JSON data"}), 400
 
         # Process the JSON data
-        
-        every_character = data.get('totalCharacterCount')
+
+        print(data)
+
+        every_character = data.get('allCharCounts')
         mistaken_characters = data.get('missedChars')
         typed_instead = data.get('missedCharFrequencies')
-
-        [letter_one, letter_two,letter_one_compliment,letter_two_compliment] = calculate_letters(every_character, mistaken_characters, typed_instead)
+        calculated_list = calculate_letters(every_character, mistaken_characters, typed_instead)
+        letter_one = calculated_list[0]
+        letter_two = calculated_list[1]
+        letter_one_compliment = calculated_list[2]  # Get the most common replacement for letter_one
+        letter_two_compliment = calculated_list[3]  # Get the most common replacement for letter_two
 
         
         if grade and age and letter_one and letter_two and letter_one_compliment and letter_two_compliment:
@@ -51,6 +58,7 @@ def handle_data():
 
 
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 500  # Handle exceptions
 
 def find_key_by_value(dictionary, value):

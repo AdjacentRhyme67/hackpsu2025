@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 import { useVariable, VariableProvider } from "../VariableContext";
 
 export default function Home() {
-  const { targetText } = useVariable(); // Access the target text from context
+  const { targetText, setTargetText } = useVariable(); // Access the target text from context
   const [typedText, setTypedText] = useState("");
   const [cursorPosition, setCursorPosition] = useState(0);
   const typingAreaRef = useRef(null);
@@ -75,13 +75,13 @@ export default function Home() {
 
   const checkCompletion = async () => {
     const coloredCharacters = document.querySelectorAll(`.${styles.text} > span[style*="color: green"], .${styles.text} > span[style*="color: red"]`);
-      if (coloredCharacters.length / totalCharacterCount == 1) {
-        fetch('http://127.0.0.1:5000/api/data', { // Your Flask endpoint
+      if (endTime) {
+        fetch('http://127.0.0.1:5000/api-data', { // Your Flask endpoint
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
               },
-              body: JSON.stringify({missedChars, missedCharFrequencies, allCharCounts }), // Send a message or data
+              body: JSON.stringify({missedChars, missedCharFrequencies, allCharCounts}), // Send a message or data
           })
           .then(response => {
 
@@ -92,7 +92,9 @@ export default function Home() {
           return response.json();
         })
         .then(data => {
+          console.error("data from backend:", data); // Log the response from the server
           setTargetText(data.response.toString());
+          console.error("Updated target text:", data.response.toString()); // Log the updated target text
         })
           .catch(error => {
               console.error('Error:', error); // Handle any errors
