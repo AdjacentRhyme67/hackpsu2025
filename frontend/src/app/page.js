@@ -100,8 +100,8 @@ export default function LaunchPage() {
             textAlign: "center",
             padding: "30px"
         }}>
-            <h1 style={{ fontSize: "2.5em", marginBottom: "15px", textAlign: "center" }}>Welcome to the Typing Test App!</h1>
-            <p style={{ marginBottom: '30px', fontSize: "1.3em", textAlign: "center" }}>¡Bienvenido a la aplicación de prueba de mecanografía!</p>
+            <h1 style={{ fontSize: "4em", marginBottom: "15px", textAlign: "center" }}>TypingUpTommorow!</h1>
+            <p style={{ marginBottom: '30px', fontSize: "3em", textAlign: "center" }}>¡Bienvenido!</p>
 
             <div style={{
                 display: 'flex',
@@ -113,7 +113,7 @@ export default function LaunchPage() {
                 alignItems: "center"
             }}>
                 <div style={{ display: 'flex', width: "100%" }}>
-                    <label style={{ width: '150px', textAlign: 'right', fontSize: "1.2em", paddingRight: "10px" }}>Age/Edad:</label>
+                    <label style={{ width: '150px', textAlign: 'right', fontSize: "1.5em", paddingRight: "10px" }}>Age/Edad:</label>
                     <input
                         type="number"
                         value={age}
@@ -122,7 +122,7 @@ export default function LaunchPage() {
                     />
                 </div>
                 <div style={{ display: 'flex', width: "100%" }}>
-                    <label style={{ width: '132px', textAlign: 'right', fontSize: "1.2em", paddingRight: "10px" }}>Grade/Grado:</label>
+                    <label style={{ width: '132px', textAlign: 'right', fontSize: "1.5em", paddingRight: "10px" }}>Grade/Grado:</label>
                     <select
                         value={grade}
                         onChange={(e) => setGrade(e.target.value)}
@@ -164,7 +164,7 @@ export default function LaunchPage() {
                     onChange={(e) => setTranslate(e.target.checked)}
                     style={{ marginRight: "10px" }}
                 />
-                <label htmlFor="translate" style={{ fontSize: "1.1em" }}>Language Translation / Traducción de Idioma</label>
+                <label htmlFor="translate" style={{ fontSize: "1.5em" }}>Language Translation / Traducción de Idioma</label>
             </div>
 
             {(ageError || gradeError) && <div style={{ marginTop: '30px', color: 'red', textAlign: 'center', fontSize: "1.2em" }}>

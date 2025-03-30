@@ -110,12 +110,16 @@ def send_analytics():
 
             analytics_json = {
                 "firstLetter" : letter_list[0],
-                "firstLetterPercent" : round((mistaken_characters[letter_list[0]] / every_character[letter_list[0]]),2),
+                "firstLetterPercent" : (mistaken_characters[letter_list[0]] / every_character[letter_list[0]]) * 100,
                 "secondLetter" : letter_list[1],
-                "secondLetterPercent" : round((mistaken_characters[letter_list[1]] / every_character[letter_list[1]]),2),
+                "secondLetterPercent" : (mistaken_characters[letter_list[1]] / every_character[letter_list[1]]) * 100,
                 "firstLetterComp" : letter_list[2],
                 "secondLetterComp" : letter_list[3]
             }
+            print(mistaken_characters[letter_list[0]])
+            print(every_character[letter_list[0]])
+            print(mistaken_characters[letter_list[1]])
+            print(every_character[letter_list[1]])
             return analytics_json, 200
 
         except Exception as e:

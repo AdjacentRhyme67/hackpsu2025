@@ -8,7 +8,7 @@ export const VariableProvider = ({ children }) => {
     const [missedChars, setMissedChars] = useState({});
     const [missedCharFrequencies, setMissedCharFrequencies] = useState({});
     const [allCharCounts, setAllCharCounts] = useState({});
-    const [targetText, setTargetText] = useState("Default");
+    const [targetText, setTargetText] = useState("Creating Lesson...");
     const [analyticsData, setAnalyticsData] = useState({});
 
     const value = {
