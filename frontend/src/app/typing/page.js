@@ -10,7 +10,6 @@ export default function Home() {
   const [cursorPosition, setCursorPosition] = useState(0);
   const typingAreaRef = useRef(null);
   const cursorRef = useRef(null);
-  const totalCharacterCount = targetText.length;
 
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -92,9 +91,9 @@ export default function Home() {
           return response.json();
         })
         .then(data => {
-          console.error("data from backend:", data); // Log the response from the server
+          console.log("data from backend:", data); // Log the response from the server
           setTargetText(data.response.toString());
-          console.error("Updated target text:", data.response.toString()); // Log the updated target text
+          console.log("Updated target text:", data.response.toString()); // Log the updated target text
         })
           .catch(error => {
               console.error('Error:', error); // Handle any errors
@@ -128,7 +127,7 @@ export default function Home() {
         cursorRef.current.style.top = `${lastSpan.offsetTop}px`;
       }
     }
-  }, [cursorPosition]);
+  }, [cursorPosition, targetText]);
 
   useEffect(() => {
     if (startTime) {
@@ -194,6 +193,27 @@ export default function Home() {
     setMissedCharFrequencies(missedFreq);
     setAllCharCounts(allChars);
   }, [typedText, targetText]);
+
+  useEffect(() => {
+    setTypedText("");
+    setCursorPosition(0);
+    setStartTime(null);
+    setEndTime(null);
+    setMissedChars({});
+    setMissedCharFrequencies({});
+    setAllCharCounts({});
+
+    // Delay cursor update
+    setTimeout(() => {
+        setCursorPosition(0); // Ensure cursor is at the beginning
+    }, 0); // Use 0 for minimal delay
+  }, [targetText]);
+
+  useEffect(() => {
+    if (typingAreaRef.current) {
+        typingAreaRef.current.textContent = ""; // Reset the content
+    }
+}, [targetText]); // Reset when targetText changes
 
   function formatTime(milliseconds) {
     const seconds = Math.floor(milliseconds / 1000);
