@@ -3,11 +3,23 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from "react";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
-import { useVariable, VariableProvider } from "../VariableContext";
+import { useVariable } from "../VariableContext";
 
 export default function Home() {
   const router = useRouter();
-  const { targetText, setTargetText } = useVariable(); // Access the target text from context
+  const { 
+    targetText, 
+    setTargetText,
+    aggregateWpm,
+    setAggregateWpm,
+    missedChars,
+    setMissedChars,
+    missedCharFrequencies,
+    setMissedCharFrequencies,
+    allCharCounts,
+    setAllCharCounts
+  } = useVariable();
+
   const [typedText, setTypedText] = useState("");
   const [cursorPosition, setCursorPosition] = useState(0);
   const typingAreaRef = useRef(null);
@@ -18,11 +30,6 @@ export default function Home() {
   const [endTime, setEndTime] = useState(null);
   const [wpm, setWpm] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [aggregateWpm, setAggregateWpm] = useState(0);
-
-  const [missedChars, setMissedChars] = useState({});
-  const [missedCharFrequencies, setMissedCharFrequencies] = useState({});
-  const [allCharCounts, setAllCharCounts] = useState({});
 
   const [redIndexes, setRedIndexes] = useState([]);
 
