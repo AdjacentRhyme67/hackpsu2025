@@ -3,9 +3,12 @@ import os
 import requests
 import json
 from Genai import generate_response
+from flask_cors import CORS
+
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Generate a random secret key for session management
+CORS(app)  # Enable Cross-Origin Resource Sharing (CORS) for the Flask app
 grade = 0
 age = 0
 
@@ -31,9 +34,9 @@ def handle_data():
 
         # Process the JSON data
         
-        every_character = data.get('every_character')
-        mistaken_characters = data.get('mistaken_characters')
-        typed_instead = data.get('typed_instead')
+        every_character = data.get('totalCharacterCount')
+        mistaken_characters = data.get('missedChars')
+        typed_instead = data.get('missedCharFrequencies')
 
         [letter_one, letter_two,letter_one_compliment,letter_two_compliment] = calculate_letters(every_character, mistaken_characters, typed_instead)
 

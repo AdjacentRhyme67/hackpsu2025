@@ -1,15 +1,17 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, createContext, useContext } from "react";
 import styles from "./page.module.css";
+import { useVariable, VariableProvider } from "../VariableContext";
 
 export default function Home() {
-  const targetText =
-    "The cat sleeps on a soft pillow. The sun shines bright in the sky. I love to eat yummy apples. The quick brown fox jumps over the lazy dog. Learning to code is fun and rewarding.";
+  const { targetText } = useVariable(); // Access the target text from context
   const [typedText, setTypedText] = useState("");
   const [cursorPosition, setCursorPosition] = useState(0);
   const typingAreaRef = useRef(null);
   const cursorRef = useRef(null);
+  const totalCharacterCount = targetText.length;
+
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [wpm, setWpm] = useState(0);
@@ -17,17 +19,20 @@ export default function Home() {
 
   const [missedChars, setMissedChars] = useState({});
   const [missedCharFrequencies, setMissedCharFrequencies] = useState({});
+  const [allCharCounts, setAllCharCounts] = useState({});
 
   const handleInputChange = (e) => {
     const input = e.target.textContent;
     setTypedText(input);
     setCursorPosition(input.length);
+    checkCompletion();
     if (!startTime) {
       setStartTime(Date.now());
     }
     if (input.length === targetText.length) {
       setEndTime(Date.now());
     }
+
   };
 
   const getTextStyle = (char, index) => {
@@ -67,6 +72,33 @@ export default function Home() {
       }
     }
   };
+
+  const checkCompletion = async () => {
+    const coloredCharacters = document.querySelectorAll(`.${styles.text} > span[style*="color: green"], .${styles.text} > span[style*="color: red"]`);
+      if (coloredCharacters.length / totalCharacterCount == 1) {
+        try {
+          const response = await fetch('/api/data', { // Your Flask endpoint
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({missedChars, missedCharFrequencies, allCharCounts }), // Send a message or data
+          });
+
+
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+
+          const result = await response.json();
+          setTargetText(result.text); // Update the target text if needed
+      } catch (error) {
+          console.error('Failed to send completion data to backend:', error);
+      }
+  }
+};
+
 
   useEffect(() => {
     if (typingAreaRef.current) {
@@ -122,10 +154,18 @@ export default function Home() {
   useEffect(() => {
     const missed = {};
     const missedFreq = {};
+    const allChars = {};
 
     for (let i = 0; i < Math.min(typedText.length, targetText.length); i++) {
       const targetChar = targetText[i].toLowerCase();
       const typedChar = typedText[i] ? typedText[i].toLowerCase() : undefined;
+
+      // Count all characters that should have been typed
+      if (!allChars[targetChar]) {
+        allChars[targetChar] = 1;
+      } else {
+        allChars[targetChar]++;
+      }
 
       if (typedChar !== targetChar) {
         if (!missed[targetChar]) {
@@ -149,6 +189,7 @@ export default function Home() {
     }
     setMissedChars(missed);
     setMissedCharFrequencies(missedFreq);
+    setAllCharCounts(allChars);
   }, [typedText, targetText]);
 
   function formatTime(milliseconds) {

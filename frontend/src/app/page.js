@@ -1,7 +1,8 @@
 "use client";
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
+import { useVariable, VariableProvider } from './VariableContext'; // Import the context to use the target text
 
 export default function LaunchPage() {
     const [age, setAge] = useState('');
@@ -9,6 +10,8 @@ export default function LaunchPage() {
     const [ageError, setAgeError] = useState('');
     const [gradeError, setGradeError] = useState('');
     const [translate, setTranslate] = useState(false); // boolean value for checkbox
+    const {targetText, setTargetText } = useVariable(); // Access the target text from context
+
 
     const handleStart = (e) => {
         if (age < 6) {
@@ -34,7 +37,24 @@ export default function LaunchPage() {
         } else {
             console.log("Language translation not requested.");
         }
+
+        fetch('http://127.0.0.1:5000/start_button_click', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({age, grade}),})
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json(); // Parse the JSON response
+        })
+        .then(data => {
+            setTargetText(data.response.toString());
+        })
+        .catch(error => {
+            console.error('Fetch error:', error); // Handle any errors
+        });
+
     };
+
+
 
     useEffect(() => {
         if (ageError || gradeError) {
