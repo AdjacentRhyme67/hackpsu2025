@@ -1,26 +1,40 @@
 "use client";
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function LaunchPage() {
     const [age, setAge] = useState('');
     const [grade, setGrade] = useState('');
     const [ageError, setAgeError] = useState('');
+    const [gradeError, setGradeError] = useState('');
 
     const handleStart = (e) => {
         if (age < 6) {
-            e.preventDefault(); // Prevent navigation
+            e.preventDefault();
             setAgeError('Not valid age, must be 6 years or older.');
             return;
         }
 
-        setAgeError(''); // Clear any previous error
+        if (!grade) {
+            e.preventDefault();
+            setGradeError('You must choose a grade.');
+            return;
+        }
 
-        // You can store age and grade here (e.g., in local storage, context, etc.)
-        // For now, we'll just log them to the console.
         console.log("Age:", age, "Grade:", grade);
     };
+
+    useEffect(() => {
+        if (ageError || gradeError) {
+            const timer = setTimeout(() => {
+                setAgeError('');
+                setGradeError('');
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [ageError, gradeError]);
 
     const gradeDescriptions = {
         1: "1st Grade: Basic letters. 1er Grado: Letras básicas.",
@@ -41,39 +55,42 @@ export default function LaunchPage() {
         <main style={{ 
             display: "flex", 
             flexDirection: "column", 
-            justifyContent: "center", // Center vertically
-            alignItems: "center", // Center horizontally
+            justifyContent: "center", 
+            alignItems: "center", 
             height: "100vh", 
             backgroundColor: "#001f3d", 
             color: "#ffffff", 
             fontFamily: "monospace", 
-            textAlign: "center" 
+            textAlign: "center",
+            padding: "30px" 
         }}>
-            <h1>Welcome to the Typing Test App!</h1>
-            <p style={{marginBottom: '20px'}}>¡Bienvenido a la aplicación de prueba de mecanografía!</p>
+            <h1 style={{ fontSize: "2.5em", marginBottom: "15px", textAlign: "center" }}>Welcome to the Typing Test App!</h1>
+            <p style={{ marginBottom: '30px', fontSize: "1.3em", textAlign: "center" }}>¡Bienvenido a la aplicación de prueba de mecanografía!</p>
 
             <div style={{ 
                 display: 'flex', 
                 flexDirection: 'column', 
-                gap: '10px', 
-                marginBottom: '20px',
-                width: '300px' // Adjust width for better input alignment
+                gap: '20px', 
+                marginBottom: '30px', 
+                width: '400px', 
+                maxWidth: '95%',
+                alignItems: "center" // Center inputs and labels
             }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <label style={{ width: '100px', textAlign: 'left' }}>Age/Edad:</label>
+                <div style={{ display: 'flex', alignItems: 'center', width: "100%" }}>
+                    <label style={{ width: '150px', textAlign: 'left', fontSize: "1.2em" }}>Age/Edad:</label>
                     <input 
                         type="number" 
                         value={age} 
                         onChange={(e) => setAge(e.target.value)} 
-                        style={{ flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid #ddd', backgroundColor: '#36393f', color: 'white' }} 
+                        style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#36393f', color: 'white', fontSize: "1.2em" }} 
                     />
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <label style={{ width: '100px', textAlign: 'left' }}>Grade/Grado:</label>
+                <div style={{ display: 'flex', alignItems: 'center', width: "100%" }}>
+                    <label style={{ width: '132px', textAlign: 'left', fontSize: "1.2em" }}>Grade/Grado:</label>
                     <select 
                         value={grade} 
                         onChange={(e) => setGrade(e.target.value)} 
-                        style={{ flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid #ddd', backgroundColor: '#36393f', color: 'white' }} 
+                        style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#36393f', color: 'white', fontSize: "1.2em" }} 
                     >
                         <option value="">Select Grade</option>
                         {Array.from({ length: 12 }, (_, i) => i + 1).map((num) => (
@@ -83,25 +100,31 @@ export default function LaunchPage() {
                 </div>
             </div>
 
-            {grade && <p style={{ marginBottom: '20px' }}>{gradeDescriptions[grade]}</p>}
+            {grade && <p style={{ marginBottom: '30px', fontSize: "1.2em", textAlign: "center" }}>{gradeDescriptions[grade]}</p>}
 
             <Link href="/typing" onClick={(e) => handleStart(e)}>
                 <button style={{ 
-                    padding: "10px 20px", 
-                    fontSize: "16px",
+                    padding: "15px 30px", 
+                    fontSize: "1.3em",
                     backgroundColor: "#0070f3", 
                     color: "white", 
                     border: "none", 
-                    borderRadius: "4px", 
-                    cursor: "pointer" 
-                }}>
+                    borderRadius: "10px", 
+                    cursor: "pointer",
+                    transition: "background-color 0.3s ease" 
+                }}
+                onMouseOver={(e) => e.target.style.backgroundColor = "#0056b3"} 
+                onMouseOut={(e) => e.target.style.backgroundColor = "#0070f3"} 
+                >
                     Enter App
                 </button>
             </Link>
 
-            {ageError && <div style={{ marginTop: '10px', color: 'red', textAlign: 'center' }}>
-                <p>Not valid age, must be 6 years or older.</p>
-                <p>Edad no válida, debe tener 6 años o más.</p>
+            {(ageError || gradeError) && <div style={{ marginTop: '30px', color: 'red', textAlign: 'center', fontSize: "1.2em" }}>
+                {ageError && <p>{ageError}</p>}
+                {ageError && <p>Edad no válida, debe tener 6 años o más.</p>}
+                {gradeError && <p>You must choose a grade.</p>}
+                {gradeError && <p>Debes elegir un grado.</p>}
             </div>}
         </main>
     );
