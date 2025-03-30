@@ -76,28 +76,29 @@ export default function Home() {
   const checkCompletion = async () => {
     const coloredCharacters = document.querySelectorAll(`.${styles.text} > span[style*="color: green"], .${styles.text} > span[style*="color: red"]`);
       if (coloredCharacters.length / totalCharacterCount == 1) {
-        try {
-          const response = await fetch('/api/data', { // Your Flask endpoint
+        fetch('http://127.0.0.1:5000/api/data', { // Your Flask endpoint
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
               },
               body: JSON.stringify({missedChars, missedCharFrequencies, allCharCounts }), // Send a message or data
-          });
-
+          })
+          .then(response => {
 
           if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
           }
-          
 
-          const result = await response.json();
-          setTargetText(result.text); // Update the target text if needed
-      } catch (error) {
-          console.error('Failed to send completion data to backend:', error);
-      }
-  }
-};
+          return response.json();
+        })
+        .then(data => {
+          setTargetText(data.response.toString());
+        })
+          .catch(error => {
+              console.error('Error:', error); // Handle any errors
+          });
+      }};
+
 
 
   useEffect(() => {
