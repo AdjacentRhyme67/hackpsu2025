@@ -23,11 +23,22 @@ export default function Home() {
   const [missedCharFrequencies, setMissedCharFrequencies] = useState({});
   const [allCharCounts, setAllCharCounts] = useState({});
 
+  const [redIndexes, setRedIndexes] = useState([]);
+
   useEffect(() => {
       if (targetText === "DONE") {
           router.push("/analytics");  // Navigate to Analytics Page
       }
   }, [targetText, router]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const redIndexesParam = params.get("redIndexes");
+    if (redIndexesParam) {
+      setRedIndexes(JSON.parse(redIndexesParam));
+    }
+  }, []);
+
   
 
   const handleInputChange = (e) => {
@@ -44,7 +55,7 @@ export default function Home() {
 
   };
 
-  const getTextStyle = (char, index) => {
+  const getTextStyle = (char, index, typedText) => {
     if (typedText[index] === undefined) {
       return { opacity: 0.5, color: "#ffffff" };
     }
@@ -52,9 +63,13 @@ export default function Home() {
     if (typedText[index] === char) {
       return { color: "green" };
     } else {
-      return { color: "red" };
-    }
-  };
+        return {
+            color: "red",
+            textDecoration: 'line-through'
+          };
+        }
+      };
+
 
   const isWordBoundary = (text, position) => {
     if (position === 0 || position === text.length) {
@@ -83,7 +98,6 @@ export default function Home() {
   };
 
   const checkCompletion = async () => {
-    const coloredCharacters = document.querySelectorAll(`.${styles.text} > span[style*="color: green"], .${styles.text} > span[style*="color: red"]`);
     if (endTime && !typedText.endsWith("DONE")) { // Only proceed if we have an end time and haven't already completed
       
       
@@ -266,7 +280,7 @@ export default function Home() {
       ></div>
       <div className={styles.text}>
         {targetText.split("").map((char, index) => (
-          <span key={index} style={getTextStyle(char, index)}>
+          <span key={index} style={getTextStyle(char, index, typedText)}>
             {char}
             {index === cursorPosition && (
               <span ref={cursorRef} className={styles.cursor}></span>
