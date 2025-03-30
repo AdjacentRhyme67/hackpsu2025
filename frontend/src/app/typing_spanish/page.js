@@ -331,13 +331,11 @@ export default function Spanish() {
     const seconds = Math.floor(milliseconds / 1000);
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    const remainingMilliseconds = milliseconds % 1000;
 
     const formattedMinutes = String(minutes).padStart(2, "0");
     const formattedSeconds = String(remainingSeconds).padStart(2, "0");
-    const formattedMilliseconds = String(remainingMilliseconds).padStart(3, "0");
 
-    return `${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
+    return `${formattedMinutes}:${formattedSeconds}`;
   }
 
   return (
@@ -361,6 +359,7 @@ export default function Spanish() {
       </div>
       <p className={styles.timer}>Elapsed Time: {formatTime(elapsedTime)}</p>
       <p className={styles.spanishText}>{spanishText}</p>
+      <h4 className={styles.translateH}> Translation: </h4>
     </div>
   );
 }

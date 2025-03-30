@@ -54,13 +54,27 @@
 
   .spanishText {
     position: fixed; /* Fixed position to stay at the bottom */
-    bottom: 20px; /* Adjust as needed */
+    bottom: 15px; /* Adjust as needed */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust centering */
+    text-align: center; /* Center text */
+    color: white; /* Or your preferred text color */
+    font-size: 1.8em; /* Adjust font size */
+    padding: 10px; /* Add padding for spacing */
+    background-color: #001f3d; /* Optional background color */
+    border-radius: 5px; /* Optional border radius */
+  }
+
+  .translateH{
+    position: fixed; /* Fixed position to stay at the bottom */
+    bottom: 150px; /* Adjust as needed */
     left: 50%; /* Center horizontally */
     transform: translateX(-50%); /* Adjust centering */
     text-align: center; /* Center text */
     color: white; /* Or your preferred text color */
     font-size: 1.2em; /* Adjust font size */
-    padding: 10px; /* Add padding for spacing */
+    padding: 5px; /* Add padding for spacing */
     background-color: transparent; /* Optional background color */
     border-radius: 5px; /* Optional border radius */
+    padding-bottom: 20px;
   }
