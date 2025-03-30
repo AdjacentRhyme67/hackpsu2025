@@ -18,6 +18,7 @@ export default function Home() {
   const [endTime, setEndTime] = useState(null);
   const [wpm, setWpm] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [aggregateWpm, setAggregateWpm] = useState(0);
 
   const [missedChars, setMissedChars] = useState({});
   const [missedCharFrequencies, setMissedCharFrequencies] = useState({});
@@ -27,6 +28,7 @@ export default function Home() {
 
   useEffect(() => {
       if (targetText === "DONE") {
+          setAggregateWpm(Math.round(aggregateWpm/4));
           router.push("/analytics");  // Navigate to Analytics Page
       }
   }, [targetText, router]);
@@ -50,7 +52,8 @@ export default function Home() {
       setStartTime(Date.now());
     }
     if (input.length === targetText.length) {
-      setEndTime(Date.now());
+      setEndTime(Date.now()); // Sets end time
+      
     }
 
   };
@@ -191,6 +194,7 @@ export default function Home() {
       const time = (endTime - startTime) / 1000 / 60;
       const words = targetText.split(" ").length;
       setWpm(Math.round(words / time));
+      setAggregateWpm(aggregateWpm + wpm);
     }
   }, [endTime, startTime]);
 
