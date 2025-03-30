@@ -21,6 +21,11 @@ def generate_response(age,grade,letter_one,letter_two,letter_one_compliment,lett
     Ensure it's a sentence that somebody would actually say and would make sense in a real world context. Don't use punctuation other than a period in each sentence. Only return the sentences,
     nothing else, and return them as a JSON with the key values as integers and the values as the sentences"""
 
+    if not letter_one or not letter_two or not letter_one_compliment or not letter_two_compliment:
+        prompt =  f"""Create 4 sentences for a {age} year old in grade {grade} to practice keyboarding with a variety of different letters.
+        Ensure it's a sentence that somebody would actually say and would make sense in a real world context. Don't use punctuation other than a period in each sentence. Only return the sentences,
+        nothing else, and return them as a JSON with the key values as integers and the values as the sentences"""
+
     client = genai.Client(api_key=GOOGLE_API_KEY)
 
     response = client.models.generate_content(model="gemini-2.0-flash",contents=prompt)
