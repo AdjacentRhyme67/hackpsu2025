@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect, useRef, createContext, useContext } from "react";
 import styles from "./page.module.css";
+import { useRouter } from "next/navigation";
 import { useVariable, VariableProvider } from "../VariableContext";
 
 export default function Home() {
+  const router = useRouter();
   const { targetText, setTargetText } = useVariable(); // Access the target text from context
   const [typedText, setTypedText] = useState("");
   const [cursorPosition, setCursorPosition] = useState(0);
@@ -20,6 +22,13 @@ export default function Home() {
   const [missedChars, setMissedChars] = useState({});
   const [missedCharFrequencies, setMissedCharFrequencies] = useState({});
   const [allCharCounts, setAllCharCounts] = useState({});
+
+  useEffect(() => {
+      if (targetText === "DONE") {
+          router.push("/analytics");  // Navigate to Analytics Page
+      }
+  }, [targetText, router]);
+  
 
   const handleInputChange = (e) => {
     const input = e.target.textContent;
