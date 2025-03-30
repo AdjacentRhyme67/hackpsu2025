@@ -110,9 +110,9 @@ def send_analytics():
 
             analytics_json = {
                 "firstLetter" : letter_list[0],
-                "firstLetterPercent" : (mistaken_characters[letter_list[0]] / every_character[letter_list[0]]) * 100,
+                "firstLetterPercent" : round((mistaken_characters[letter_list[0]] / every_character[letter_list[0]]) * 100,2),
                 "secondLetter" : letter_list[1],
-                "secondLetterPercent" : (mistaken_characters[letter_list[1]] / every_character[letter_list[1]]) * 100,
+                "secondLetterPercent" : round((mistaken_characters[letter_list[1]] / every_character[letter_list[1]]) * 100,2),
                 "firstLetterComp" : letter_list[2],
                 "secondLetterComp" : letter_list[3]
             }
