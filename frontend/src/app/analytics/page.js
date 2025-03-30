@@ -12,7 +12,7 @@ export default function AnalyticsPage() {
             fontFamily: "monospace",
             textAlign: "center"
         }}>
-            <h1 style={{ fontSize: "6em", marginTop: "5vh" }}>Analytics</h1>
+            <h1 style={{ fontSize: "6em", marginTop: "5vh", textDecoration: "underline" }}>Analytics</h1>
             <h2 style={{ fontSize: "3em", marginTop: "10px" }}>Análisis</h2>
 
             <div style={{ 
@@ -22,7 +22,8 @@ export default function AnalyticsPage() {
                 marginTop: "10vh" 
             }}>
                 <div style={{ textAlign: "left", fontSize: "1.5em" }}>
-                    <h3>Most Missed Letters</h3>
+                    <h3 style={{ textDecoration: "underline" }}>Most Missed Letters</h3>
+                    <h3 style={{ textDecoration: "underline" }}>Las letras más perdidas</h3>
                     <p>1.) Letter "E" : 15%</p>
                     <p style={{ fontSize: "0.8em" }}>Letra "E" : 15%</p>
                     <p>2.) Letter "A" : 12%</p>
@@ -30,8 +31,11 @@ export default function AnalyticsPage() {
                     <p>3.) Letter "S" : 10%</p>
                     <p style={{ fontSize: "0.8em" }}>Letra "S" : 10%</p>
                 </div>
-                <div style={{ flex: 1 }}>
-                    {/* Placeholder for future content */}
+                <div style={{ textAlign: "right", fontSize: "1.5em" }}>
+                    <h3 style={{ textDecoration: "underline" }}>Words Per Minute (WPM)</h3>
+                    <h3 style={{ textDecoration: "underline" }}>Palabras por minuto</h3>
+                    <p>Total: 45 WPM</p>
+                    <p style={{ fontSize: "0.8em" }}>Promedio: 45 PPM</p>
                 </div>
             </div>
         </main>
