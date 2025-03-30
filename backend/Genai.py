@@ -1,7 +1,7 @@
 from google import genai
 from api_keys import GOOGLE_API_KEY
 
-def generate_content(age,grade,letter_one,letter_two,letter_one_compliment,letter_two_compliment):
+def generate_response(age,grade,letter_one,letter_two,letter_one_compliment,letter_two_compliment):
     """
     Generates content using the Google GenAI API.
     
@@ -18,7 +18,8 @@ def generate_content(age,grade,letter_one,letter_two,letter_one_compliment,lette
     prompt = f"""Create 4 sentences for a {age} year old in grade {grade} to practice keyboarding.
     They struggle typing the letters {letter_one} and {letter_two}. They often type {letter_one_compliment} instead of {letter_one} and {letter_two_compliment} instead of {letter_two}.
     Tailor the sentences so they can work on typing the letters correctly and learning the difference between the letters that they are supposed to type and the letters that they type instead.
-    Ensure it's a sentence that somebody would actually say and would make sense in a real world context. Don't use punctuation other than a period in each sentence."""
+    Ensure it's a sentence that somebody would actually say and would make sense in a real world context. Don't use punctuation other than a period in each sentence. Only return the sentences,
+    nothing else, and return them as a JSON with the key values as integers and the values as the sentences"""
 
     client = genai.Client(api_key=GOOGLE_API_KEY)
 

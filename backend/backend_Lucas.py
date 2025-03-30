@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, j
 import os
 import requests
 import json
-from Genai import generate_content
+from Genai import generate_response
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Generate a random secret key for session management
@@ -25,8 +25,9 @@ def handle_data():
         if grade and age and letter_one and letter_two and letter_one_compliment and letter_two_compliment:
 
             # Call the generate_content function with the provided data
-            response = generate_content(age, grade, letter_one, letter_two, letter_one_compliment, letter_two_compliment)
-            return jsonify({"response": response}), 200
+            response = generate_response(age, grade, letter_one, letter_two, letter_one_compliment, letter_two_compliment)
+            # return jsonify({"response": response}), 200
+            return response.text
             
 
     except Exception as e:
@@ -36,4 +37,4 @@ def handle_data():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
+    
