@@ -251,9 +251,6 @@ export default function Home() {
     setCursorPosition(0);
     setStartTime(null);
     setEndTime(null);
-    setMissedChars({});
-    setMissedCharFrequencies({});
-    setAllCharCounts({});
 
     // Delay cursor update
     setTimeout(() => {

@@ -1,6 +1,10 @@
 "use client";
 
+import { useVariable } from "../VariableContext";
+
 export default function AnalyticsPage() {
+    const { aggregateWpm } = useVariable();
+        
     return (
         <main style={{
             display: "flex",
@@ -13,7 +17,7 @@ export default function AnalyticsPage() {
             textAlign: "center"
         }}>
             <h1 style={{ fontSize: "6em", marginTop: "5vh", textDecoration: "underline" }}>Analytics</h1>
-            <h2 style={{ fontSize: "3em", marginTop: "10px" }}>Análisis</h2>
+            <h2 style={{ fontSize: "3em", marginTop: "10px", textDecoration: "underline" }}>Análisis</h2>
 
             <div style={{ 
                 display: "flex", 
@@ -21,7 +25,7 @@ export default function AnalyticsPage() {
                 width: "80%", 
                 marginTop: "10vh" 
             }}>
-                <div style={{ textAlign: "left", fontSize: "1.5em" }}>
+                <div style={{ textAlign: "left", fontSize: "2.5em" }}>
                     <h3 style={{ textDecoration: "underline" }}>Most Missed Letters</h3>
                     <h3 style={{ textDecoration: "underline" }}>Las letras más perdidas</h3>
                     <p>1.) Letter "E" : 15%</p>
@@ -31,11 +35,10 @@ export default function AnalyticsPage() {
                     <p>3.) Letter "S" : 10%</p>
                     <p style={{ fontSize: "0.8em" }}>Letra "S" : 10%</p>
                 </div>
-                <div style={{ textAlign: "right", fontSize: "1.5em" }}>
+                <div style={{ textAlign: "right", fontSize: "2.5em" }}>
                     <h3 style={{ textDecoration: "underline" }}>Words Per Minute (WPM)</h3>
                     <h3 style={{ textDecoration: "underline" }}>Palabras por minuto</h3>
-                    <p>Total: 45 WPM</p>
-                    <p style={{ fontSize: "0.8em" }}>Promedio: 45 PPM</p>
+                    <p style={{ textAlign: "right", fontSize: "7em" }}>{aggregateWpm}</p>
                 </div>
             </div>
         </main>
