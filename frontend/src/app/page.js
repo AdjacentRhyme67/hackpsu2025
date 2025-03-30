@@ -2,16 +2,17 @@
 
 import Link from 'next/link';
 import React, { useState, useEffect, createContext, useContext } from 'react';
+import { useRouter } from "next/navigation";
 import { useVariable, VariableProvider } from './VariableContext'; // Import the context to use the target text
 
 export default function LaunchPage() {
+    const router = useRouter();
     const [age, setAge] = useState('');
     const [grade, setGrade] = useState('');
     const [ageError, setAgeError] = useState('');
     const [gradeError, setGradeError] = useState('');
     const [translate, setTranslate] = useState(false); // boolean value for checkbox
-    const {targetText, setTargetText } = useVariable(); // Access the target text from context
-
+    const { targetText, setTargetText } = useVariable(); // Access the target text from context
 
     const handleStart = (e) => {
         if (age < 6) {
@@ -38,24 +39,25 @@ export default function LaunchPage() {
             console.log("Language translation not requested.");
         }
 
-        fetch('http://127.0.0.1:5000/start_button_click', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({age, grade}),})
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); // Parse the JSON response
+        fetch('http://127.0.0.1:5000/start_button_click', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ age, grade }),
         })
-        .then(data => {
-            const combinedText = Object.values(data).join(" ");
-            setTargetText(combinedText);
-        })
-        .catch(error => {
-            console.error('Fetch error:', error); // Handle any errors
-        });
-
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parse the JSON response
+            })
+            .then(data => {
+                const combinedText = Object.values(data).join(" ");
+                setTargetText(combinedText);
+            })
+            .catch(error => {
+                console.error('Fetch error:', error); // Handle any errors
+            });
     };
-
-
 
     useEffect(() => {
         if (ageError || gradeError) {
@@ -83,46 +85,48 @@ export default function LaunchPage() {
         12: "12th Grade: Professional writing. 12vo Grado: Escritura profesional."
     };
 
+    const linkHref = translate ? "/typing_spanish" : "/typing"; // Dynamically determine the link
+
     return (
-        <main style={{ 
-            display: "flex", 
-            flexDirection: "column", 
-            justifyContent: "center", 
-            alignItems: "center", 
-            height: "100vh", 
-            backgroundColor: "#001f3d", 
-            color: "#ffffff", 
-            fontFamily: "monospace", 
+        <main style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            backgroundColor: "#001f3d",
+            color: "#ffffff",
+            fontFamily: "monospace",
             textAlign: "center",
-            padding: "30px" 
+            padding: "30px"
         }}>
             <h1 style={{ fontSize: "2.5em", marginBottom: "15px", textAlign: "center" }}>Welcome to the Typing Test App!</h1>
             <p style={{ marginBottom: '30px', fontSize: "1.3em", textAlign: "center" }}>¡Bienvenido a la aplicación de prueba de mecanografía!</p>
 
-            <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: '20px', 
-                marginBottom: '30px', 
-                width: '400px', 
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '20px',
+                marginBottom: '30px',
+                width: '400px',
                 maxWidth: '95%',
-                alignItems: "center" 
+                alignItems: "center"
             }}>
                 <div style={{ display: 'flex', width: "100%" }}>
                     <label style={{ width: '150px', textAlign: 'right', fontSize: "1.2em", paddingRight: "10px" }}>Age/Edad:</label>
-                    <input 
-                        type="number" 
-                        value={age} 
-                        onChange={(e) => setAge(e.target.value)} 
-                        style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#36393f', color: 'white', fontSize: "1.2em" }} 
+                    <input
+                        type="number"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                        style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#36393f', color: 'white', fontSize: "1.2em" }}
                     />
                 </div>
                 <div style={{ display: 'flex', width: "100%" }}>
                     <label style={{ width: '132px', textAlign: 'right', fontSize: "1.2em", paddingRight: "10px" }}>Grade/Grado:</label>
-                    <select 
-                        value={grade} 
-                        onChange={(e) => setGrade(e.target.value)} 
-                        style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#36393f', color: 'white', fontSize: "1.2em" }} 
+                    <select
+                        value={grade}
+                        onChange={(e) => setGrade(e.target.value)}
+                        style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#36393f', color: 'white', fontSize: "1.2em" }}
                     >
                         <option value="">Select Grade</option>
                         {Array.from({ length: 12 }, (_, i) => i + 1).map((num) => (
@@ -134,31 +138,31 @@ export default function LaunchPage() {
 
             {grade && <p style={{ marginBottom: '30px', fontSize: "1.2em", textAlign: "center" }}>{gradeDescriptions[grade]}</p>}
 
-            <Link href="/typing" onClick={(e) => handleStart(e)}>
-                <button style={{ 
-                    padding: "15px 30px", 
+            <Link href={linkHref} onClick={(e) => handleStart(e)}>
+                <button style={{
+                    padding: "15px 30px",
                     fontSize: "1.3em",
-                    backgroundColor: "#0070f3", 
-                    color: "white", 
-                    border: "none", 
-                    borderRadius: "10px", 
+                    backgroundColor: "#0070f3",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "10px",
                     cursor: "pointer",
-                    transition: "background-color 0.3s ease" 
+                    transition: "background-color 0.3s ease"
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = "#0056b3"} 
-                onMouseOut={(e) => e.target.style.backgroundColor = "#0070f3"} 
+                    onMouseOver={(e) => e.target.style.backgroundColor = "#0056b3"}
+                    onMouseOut={(e) => e.target.style.backgroundColor = "#0070f3"}
                 >
                     Enter App
                 </button>
             </Link>
 
             <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
-                <input 
-                    type="checkbox" 
-                    id="translate" 
+                <input
+                    type="checkbox"
+                    id="translate"
                     checked={translate} // Use the boolean state variable
-                    onChange={(e) => setTranslate(e.target.checked)} 
-                    style={{ marginRight: "10px" }} 
+                    onChange={(e) => setTranslate(e.target.checked)}
+                    style={{ marginRight: "10px" }}
                 />
                 <label htmlFor="translate" style={{ fontSize: "1.1em" }}>Language Translation / Traducción de Idioma</label>
             </div>

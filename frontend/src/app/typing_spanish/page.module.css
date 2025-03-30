@@ -1,0 +1,50 @@
+.container {
+    display: flex;
+    flex-direction: column; /* Changed to column */
+    align-items: center;
+    justify-content: flex-start; /* Changed to flex-start */
+    min-height: 100vh; /* Changed to min-height */
+    background-color: #001f3d;
+    font-family: monospace;
+    color: #ffffff;
+    text-align: left;
+    padding-top: 20px; /* Added padding to top */
+  }
+  
+  .text {
+    font-size: 36px;
+    font-weight: normal;
+    letter-spacing: 0px;
+    margin: 20px; /* Reduced margin */
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+    white-space: pre-wrap;
+    padding: 0 60px;
+    box-sizing: border-box;
+    align-self: flex-start; /* Align text to the start */
+  }
+  
+  .typingArea {
+    position: relative; /* Changed to relative */
+    width: 100%;
+    z-index: 1;
+    outline: none;
+    background-color: transparent;
+    color: transparent;
+    font-size: 0px;
+    letter-spacing: 0px;
+    padding: 0 60px;
+    text-align: left;
+    white-space: pre-wrap;
+    box-sizing: border-box;
+  }
+  
+  /* Cursor styles */
+  .cursor {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 36px;
+    background-color: #f0e100;
+  }
