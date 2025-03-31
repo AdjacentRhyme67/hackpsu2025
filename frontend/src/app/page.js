@@ -100,7 +100,7 @@ export default function LaunchPage() {
             textAlign: "center",
             padding: "30px"
         }}>
-            <h1 style={{ fontSize: "4em", marginBottom: "15px", textAlign: "center" }}>TypingUpTommorow!</h1>
+            <h1 style={{ fontSize: "4em", marginBottom: "15px", textAlign: "center" }}>TypingUpTomorrow!</h1>
             <p style={{ marginBottom: '30px', fontSize: "3em", textAlign: "center" }}>¡Bienvenido!</p>
 
             <div style={{
@@ -152,7 +152,7 @@ export default function LaunchPage() {
                     onMouseOver={(e) => e.target.style.backgroundColor = "#0056b3"}
                     onMouseOut={(e) => e.target.style.backgroundColor = "#0070f3"}
                 >
-                    Enter App
+                    Start
                 </button>
             </Link>
 
